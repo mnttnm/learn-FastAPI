@@ -16,6 +16,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
 
     hashed_pass = utils.hash(user.password)
     user.password = hashed_pass
+    # validates that the newly created user is as per the model.User schema
     new_user = models.User(**user.dict())
     db.add(new_user)
     db.commit()

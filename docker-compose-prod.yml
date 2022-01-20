@@ -7,7 +7,7 @@ services:
       - postgres
    ports:
       - 8000:8000
-   volumes:
+  #  volumes:
      # binds the local folder to the the provided in the location in the container
      # it is like folder sync <src_folder>:<destination_folder_in_container>
      # we don't want bind on our production environment

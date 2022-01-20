@@ -47,9 +47,7 @@ def get_posts(db: Session = Depends(get_db),   current_user: models.User = Depen
 
     posts_query = db.query(models.Post, count(models.Vote.post_id).label("votes")).join(
         models.Vote, models.Post.id == models.Vote.post_id, isouter=True).group_by(models.Post.id).filter(models.Post.title.contains(search)).limit(limit).offset(skip)
-    print(posts_query)
     posts = posts_query.all()
-    print(posts)
     return posts
 
 
@@ -63,10 +61,7 @@ def get_post(id: int, db: Session = Depends(get_db),  current_user: models.User 
 
     posts_query = db.query(models.Post, count(models.Vote.post_id).label("votes")).join(
         models.Vote, models.Post.id == models.Vote.post_id, isouter=True).where(models.Post.id == id).group_by(models.Post.id)
-    # print(posts_query)
     post = posts_query.first()
-    # print(posts)
-    # return posts
 
     if not post:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
