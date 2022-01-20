@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  api:
+   build: .
+   depends_on:
+      - postgres
+   ports:
+      - 8000:8000
+   volumes:
+     # binds the local folder to the the provided in the location in the container
+     # it is like folder sync <src_folder>:<destination_folder_in_container>
+     # we don't want bind on our production environment
+     # - ./:/usr/src/app:ro
+   command: bash -c "alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000" #overrides the command in the dockerfile
+  #  env_file:
+  #     - ./.env
+   environment:
+      - DATABASE_HOSTNAME=${DATABASE_HOSTNAME} # this name will automatically get resolved to the ip address of our database, docker does that
+      - DATABASE_PORT=${DATABASE_PORT}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_NAME=${DATABASE_NAME}
+      - DATABASE_USERNAME=${DATABASE_USERNAME}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALGORITHM=${ALGORITHM}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=${ACCESS_TOKEN_EXPIRE_MINUTES}
+  postgres:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=post-2593-Mnt
+      - POSTGRES_DB=fastapi
+    volumes:
+      # path in the container that postgrest will write data to
+      - postgres-db:/var/lib/postgresql/data
+
+volumes:
+  # multiple containers can access this named volume now
+  postgres-db:
