@@ -1,6 +1,6 @@
 name: Build and Deploy code
 
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
   build-job:
